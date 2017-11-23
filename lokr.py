@@ -39,7 +39,7 @@ def encrypt(text, key):
 def decrypt(text, key):
     #inverse of encrypt(): decrypts text based on key, returns: decrypted text as string
     newCharset = ''
-    newCharset = list(cpreorderencrypt(charset, key))
+    newCharset = list(cpreorderencrypt(charset, int(key)))
     decrypted = ''
     for i in range(len(text)):
         if text[i] in cpCharset:
@@ -88,7 +88,6 @@ def readfile(filename, call):
     # keys = list(map(int, lines[1::3]))
     # labels = lines[2::3]
     # pwds = lines[3::3]
-    #COMBAK after
     info = pickle.load(f)
     print(info)
     labels = list(info.keys())
@@ -184,7 +183,6 @@ def apenclabelandpwd(filename, label, pwd, key):
 
 def declabelandpwd(filename, info):
     #decrypts SL file, input: file, info('labels' or 'pwds'), returns: info as a list
-    #FIXME IM BROKE AFFFFF
     print('RAN THIS LINE 186')
     keys = readfile(filename, 'keys')
     labels =  readfile(filename,"labels")
@@ -262,12 +260,12 @@ import os
 
 #VARS
 window = tk.Tk()
-frame = tk.Frame(window)
+# frame = tk.Frame(window)
 users = readusrsfile()
 #print users
 
 #WINDOW SETTINGS
-window.minsize(400,200)
+window.minsize(350,200)
 
 #FUNCTIONS
 def ch():
@@ -301,7 +299,7 @@ def checkusr(event=None):
         confirm.config(text='You have successfully logged on!' )
         usr.delete(0, tk.END)
         pas.delete(0, tk.END)
-        # logolbl.pack_forget()
+        logolbl.pack_forget()
         title.pack_forget()
         logtitle.pack_forget()
         usrl.pack_forget()
@@ -313,11 +311,21 @@ def checkusr(event=None):
         clear.pack_forget()
         confirm.pack_forget()
         window.unbind("<Return>")
-        # logolbl.grid(row=0, column=1, padx = 10, pady = 10)
-        title.grid(row=0, column= 2, columnspan = 3, padx = 10)
-        line = tk.Label(window, text = '--------------------------------------------------------------------------')
-        line.grid(row=1, column =1, columnspan = 3)
-        sellbl = tk.Label(window, text = 'SecureLocker File associated with account :  ' )
+        window.title('LOKR MANAGER')
+
+        #change frame
+        leftframe = tk.Frame(window, padx = 5, pady=5)
+        leftframe.grid(row=0, column=0)
+        rightframe = tk.Frame(window, padx = 5, pady=5)
+        rightframe.grid(row=0, column=1)
+        bottomframe = tk.Frame(window, padx = 5, pady=5)
+        bottomframe.grid(row=1, column=0)
+        brightframe = tk.Frame(window, padx = 5, pady=5)
+        brightframe.grid(row=1, column=1)
+        mtitle = tk.Label(leftframe, text="Lokr",  font =('Lucida Console', 40))
+        logol = tk.Label(leftframe, text= '\n', image=logo, pady = 50)
+        mtitle.pack()
+        logol.pack()
         results = []
         r = 5
         def cptoclip():
@@ -332,17 +340,17 @@ def checkusr(event=None):
             pwds = readfile(f, 'pwds')
             p.config(text = '')
             p.config(text = pwds[buttonchoice.get()])
-            d.config(text = 'SHOW DECRYPTED \nPASSWORD')
+            d.config(text = 'SHOW DECRYPTED PASSWORD')
         def pwdfromlblbc():
             #runs pwdfromlbl and changes d button display text
             pwdfromlbl()
-            d.config(text = 'SHOW DECRYPTED \nPASSWORD')
+            d.config(text = 'SHOW DECRYPTED PASSWORD')
             d.config(command = showpwd)
         def showpwd():
             #changes p label and d button display text, displayed decrypted pwd
             pwds = declabelandpwd(f, 'pwds')
             p.config(text = pwds[buttonchoice.get()])
-            d.config(text = 'HIDE DECRYPTED \nPASSWORD')
+            d.config(text = 'HIDE DECRYPTED PASSWORD')
             d.config(command = pwdfromlblbc)
         #TODO: new functions, delete pwd, change/update pwd
         def encpass():
@@ -398,7 +406,7 @@ def checkusr(event=None):
             newpc.pack()
             eb.pack()
             conf.pack()
-        buttonchoice = tk.IntVar()
+        # buttonchoice = tk.IntVar()
         for file in os.listdir(os.getcwd()):
             #finds all lokr files in cwd
             if file.endswith(".lokr"):
@@ -407,37 +415,51 @@ def checkusr(event=None):
             if file.startswith(encrypt(usrname, 11)):
                 f = file
         pwds = readfile(f, 'pwds')
-        sellbl.config(text = 'You are logged in as: ' + usrname + '\nThe SecureLocker File that is associated with your account is: ' +  f)
-        sellbl.grid(row =2, column = 1, columnspan = 3, padx = 10)
-        lbllbl = tk.Label(window, text='WEBSITES/SERVICES:')
-        lbllbl.grid(row =3 , column = 1, pady = 15)
-        pwdlbl = tk.Label(window, text='PASSWORD:')
-        pwdlbl.grid(row =3, column = 2)
-        controllbl = tk.Label(window, text='ENCRYPT/DECRYPT:')
-        controllbl.grid(row=3, column =3,)
         #print results
-        def placebuttons():
+        sellbl = tk.Label(rightframe, text = 'Lokr File associated with account :  ' )
+        sellbl.config(text = 'You are logged in as: ' + usrname + '\nThe Lokr File that is associated with your account is: ' +  f)
+        sellbl.pack(side='top')
+        listboxtitle = tk.Label(bottomframe, text='Passwords:', font = ("Verdana", 12))
+        listbox = tk.Listbox(bottomframe, font = ("Verdana", 12))
+        lbls = declabelandpwd(f, 'labels')
+        keys = readfile(f, 'keys')
+        def createlistbox():
             #places buttons w/ decrypted pwd labels
-            r = 5
-            lbls = declabelandpwd(f, 'labels')
+            listboxtitle.pack()
+            listbox.pack()
             lblsd = dict(enumerate(lbls))
             for ind, lbl in list(lblsd.items()):
-                    #print ind
-                    tk.Radiobutton(window, indicatoron = 0, width = 20, height = 3, text = lbl, variable = buttonchoice, value = ind , command=pwdfromlbl).grid(row = r, column =  1)
-                    r += 1
-        print(pwds)
+                listbox.insert(ind, lbl)
+            # r = 5
+            #         #print ind
+            #         tk.Radiobutton(window, indicatoron = 0, width = 20, height = 3, text = lbl, variable = buttonchoice, value = ind , command=pwdfromlbl).grid(row = r, column =  1)
+            #         r += 1
+        def getlistboxselection(event):
+            lbllbl.config(text='LABEL:\n' + lbls[listbox.curselection()[0]])
+            pwdlbl.config(text='PASSWORD:\n' + pwds[listbox.curselection()[0]])
+            keylbl.config(text='KEY:\n' + str(keys[listbox.curselection()[0]]))
+
+        # print(pwds)
         if pwds is not None:
-            p = tk.Label(window, text = pwds[0], font = ('bold', 12))
-            p.grid(row = 5 , column= 2)
-            placebuttons()
-        e = tk.Button(window, text = 'ENCRYPT \nPASSWORD', width = 20, pady = 5, command = encpass)
-        d = tk.Button(window, text = 'SHOW DECRYPTED \nPASSWORD', width = 20, pady = 5, command = showpwd)
-        cp = tk.Button(window, text = 'COPY PASSWORD \nTO CLIPBOARD', width = 20, pady = 5, command = cptoclip)
-        delete = tk.Button(window, text = 'DELETE AN ENCRYPTED \nPASSWORD', width = 20, pady = 5)
-        d.grid(row = 5, column = 3)
-        e.grid(row = 6, column = 3)
-        cp.grid(row= 7, column = 3)
-        delete.grid(row = 8, column = 3)
+            # p = tk.Label(window, text = pwds[0], font = ('bold', 12))
+            # p.grid(row = 5 , column= 2)
+            createlistbox()
+        e = tk.Button(rightframe, text = 'ENCRYPT PASSWORD', width = 30, pady = 5, command = encpass)
+        d = tk.Button(rightframe, text = 'SHOW DECRYPTED PASSWORD', width = 30, pady = 5, command = showpwd)
+        cp = tk.Button(rightframe, text = 'COPY PASSWORD TO CLIPBOARD', width = 30, pady = 5, command = cptoclip)
+        delete = tk.Button(rightframe, text = 'DELETE AN ENCRYPTED PASSWORD', width = 30, pady = 5)
+        d.pack()
+        e.pack()
+        cp.pack()
+        delete.pack()
+        # getlistboxselection(1)
+        listbox.bind("<<ListboxSelect>>", getlistboxselection)
+        lbllbl = tk.Label(brightframe, text='LABEL:\n')
+        lbllbl.grid(row = 0 , column = 0)
+        pwdlbl = tk.Label(brightframe, text='PASSWORD:\n')
+        pwdlbl.grid(row =1, column = 0)
+        keylbl = tk.Label(brightframe, text='KEY:\n')
+        keylbl.grid(row=2, column =0,)
     else:
         confirm.config(text='Your username and/or password is incorrect.' )
         usr.delete(0, tk.END)
@@ -475,7 +497,7 @@ def newuser():
             pw = newpas.get()
             apusrinfotofile(encrypt(un, 7), encrypt(pw, 7))
             createlocker(encrypt(un, 11))
-            confirm.config(text='You have successfully registered!\n A new Secure has been created for you.')
+            confirm.config(text='You have successfully registered!\n A new Lokr has been created for you.')
             newusrl.pack_forget()
             newusr.pack_forget()
             newpasl.pack_forget()
@@ -493,19 +515,19 @@ def newuser():
 #LOGIN UI WIDGETS
 #TODO: fix ui, get rid of pics etc
 ex = tk.Button(window, text = 'Exit', command= ee)
-# logo = tk.PhotoImage(file='lock.gif')
-# logolbl = tk.Label(window, text= '\n', image=logo, pady = 50)
-title = tk.Label(window, text="SecureLocker",  font =('Impact', 25))
+logo = tk.PhotoImage(file='lock.png')
+logolbl = tk.Label(window, text= '\n', image=logo, pady = 50)
+title = tk.Label(window, text="Lokr",  font =('Lucida Console', 40))
 logtitle = tk.Label(window, text="\nVersion: " + str(ver) + "\n\nPlease Login:")
 usr = tk.Entry(window)
 pas = tk.Entry(window, show='*')
 usrl = tk.Label(window, text='Username:')
 pasl = tk.Label(window, text='Password:')
-login = tk.Button(window, text='Login', command=checkusr)
+login = tk.Button(window, text='Launch', command=checkusr)
 newusr = tk.Button(window, text = 'Register', command=newuser)
 clear = tk.Button(window, text = 'Clear', command=cleart)
 confirm = tk.Label(window)
-# logolbl.pack()
+logolbl.pack()
 title.pack()
 logtitle.pack()
 usrl.pack()
@@ -519,6 +541,6 @@ confirm.pack()
 window.bind("<Return>", checkusr)
 
 #START WINDOW
-window.wm_iconbitmap(window, default ='e:/downloads/favicon.ico')
-window.title('SecureLocker')
+window.wm_iconbitmap(window, default ='closedlock.ico')
+window.title('LOKR LOGIN')
 window.mainloop()
