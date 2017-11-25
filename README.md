@@ -1,5 +1,5 @@
-# Lokr
+LOKR
+=====
+##### SecureLocker Upgraded. A little bit safer. New GUI. Edit and Delete Passwords
 
-##SecureLocker 2.0
-
-VERSION 1
+VERSION 1.0
