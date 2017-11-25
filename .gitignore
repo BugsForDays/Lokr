@@ -1,5 +1,6 @@
 *.lokr
 *.exe
+*.ulokr
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
