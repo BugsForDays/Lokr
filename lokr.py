@@ -1,16 +1,21 @@
-#██╗      ██████╗ ██╗  ██╗██████╗
-#██║     ██╔═══██╗██║ ██╔╝██╔══██╗
-#██║     ██║   ██║█████╔╝ ██████╔╝
-#██║     ██║   ██║██╔═██╗ ██╔══██╗
-#███████╗╚██████╔╝██║  ██╗██║  ██║
-#╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+"""
+██╗      ██████╗ ██╗  ██╗██████╗
+██║     ██╔═══██╗██║ ██╔╝██╔══██╗
+██║     ██║   ██║█████╔╝ ██████╔╝
+██║     ██║   ██║██╔═██╗ ██╔══██╗
+███████╗╚██████╔╝██║  ██╗██║  ██║
+╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 
+****************************************************************************
+|                   LOKR PASSWORD ENCRYTION MANAGER                        |
+|   Created by BugsForDays aka Philip Z(https://github.com/BugsForDays)    |                                                            |
 #***************************************************************************
-# LOKR PASSWORD ENCRYTION MANAGER                                          |
-# Created by BugsForDays aka Philip Z(https://github.com/BugsForDays)      |                                                            |
-#***************************************************************************
+"""
 import random
 import pickle
+import tkinter as tk
+from tkinter import messagebox
+import os
 
 ver = 1.0
 
@@ -23,7 +28,7 @@ cpcsetfile.close()
 
 newCharset = ''
 
-#ENCRYPTION ASSIST FUNCTIONS
+#ENCRYPTION/DECRYPTION METHODS
 def cpreorderencrypt(cp, key):
     #reorder cp based on key, returns: cp as new cp list
     return cp[key:] + cp[0:key]
@@ -35,7 +40,6 @@ def findindex(the_list, substring):
             return i
     return -1
 
-#ENCRYPTION/DECRYPTION METHODS
 def encrypt(text, key):
     #encrypt text with key via string construction, returns: encrypted text as string
     encrypted = ''
@@ -58,21 +62,12 @@ def decrypt(text, key):
     key = 0
     return decrypted
 
-# STORAGE + MAGAGEMENT FRAMEWORK/FUNCTIONS
+# STORAGE + MAGAGEMENT METHODS
 def appendtousrfile(filename, contents):
     #appends contents to USR file
     f = open(filename + '.ulokr', 'a')
     f.write(contents + '\n')
     f.close()
-
-#merged wit apenclabelandpwd
-# def appendtofile(filename, contents):
-
-#     #appends contents to SL filename
-#     f = open(filename + '.lokr', 'w+')
-#     whatsinside = pickle.load(f)
-#
-#     f.close()
 
 def striplist(list):
     #strips each element in list, returns: stripped newlist as a list
@@ -85,35 +80,20 @@ def striplist(list):
 
 def readfile(filename, call):
     #reads .lokr, input: file, call('keys', 'labels, or 'pwds'), returns: info in file as a list
-    lines = []
     if filename.endswith('.lokr'):
         pcfn = filename
     else:
         pcfn = filename + '.lokr'
     f = open(pcfn, 'rb')
     f.seek(0)
-    # print(f)
-    #     for line in f:
-    #         lines.append(line)
-    # keys = list(map(int, lines[1::3]))
-    # labels = lines[2::3]
-    # pwds = lines[3::3]
     info = pickle.load(f)
-    print(info)
     labels = list(info.keys())
     keys = []
     pwds = []
-    # print(info.keys())
-    # print(keys)
     for k, i in enumerate(list(info.keys())):
-        # print(k)
-        # print(i)
-        # print((list(list(info.values())[k].keys())[0]))
         keys.append((list(list(info.values())[k].keys())[0]))
-        # print('keys: ' + str(keys))
     for k, i in enumerate(list(info.keys())):
         pwds.append((list(list(info.values())[k].values())[0]))
-    # print(keys)
     if call == 'keys':
         return keys
     if call == 'labels':
@@ -121,6 +101,7 @@ def readfile(filename, call):
     if call == 'pwds':
         return pwds
     f.close()
+
 def apusrinfotofile(usr, pwd):
     #appends usrname and pwd to USR file
     f = open('usrs.ulokr','rb')
@@ -130,13 +111,6 @@ def apusrinfotofile(usr, pwd):
     f = open('usrs.ulokr','wb')
     pickle.dump(usrfile, f)
     f.close()
-    #dontneed
-    # def apf(file, contents):
-    #     f = open(file + '.ulokr', 'a')
-    #     f.write(contents + '\n')
-    #     f.close()
-    # apf('usrs', usr)
-    # apf('usrs', pwd)
 
 def readusrsfile():
     #reads USR file, returns: usr info as a dict in format: usr:pwd
@@ -147,43 +121,13 @@ def readusrsfile():
     for k , v in usrinfo.items():
         newdict[decrypt(k, 7)] = decrypt(v, 7)
     return newdict
-    # dontneed
-    # usrlines = []
-    # with open('usrs.ulokr', 'r') as f:
-    #     for line in f:
-    #         usrlines.append(line)
-    # #print usrlines
-    # usrnames = usrlines[0::2]
-    # pds =  usrlines[1::2]
-    # ind = 0
-    # #print usrnames
-    # #print pds
-    # decusr = []
-    # decpd = []
-    # for usr in usrnames:
-    #     decusr.append(decrypt(usrnames[ind], 7))
-    #     decpd.append(decrypt(pds[ind], 7))
-    #     ind = ind + 1
-    # #print decusr
-    # #print decpd
-    # usrinfo = dict(list(zip(decusr, decpd)))
 
-
-    #INFO TYPES PARSER TESTER MOD
-    """
-    print('labels' + str(striplist(labels)))
-    print('pwds' + str(striplist(pwds)))
-    print('keys' + str(striplist(keys)))
-    """
-
-#ENCRYPTED INFO STORAGE FUNCTIONS
 def apenclabelandpwd(filename, label, pwd, key):
     #appends encrypted pass, key, lbl to SL file
     enclbl = encrypt(label, key)
     encpwd = encrypt(pwd, key)
     f = open(filename + '.lokr', 'rb')
     f.seek(0)
-    print(f)
     whatsinside = pickle.load(f)
     f.close()
     whatsinside[enclbl] = {str(key) : encpwd}
@@ -193,11 +137,9 @@ def apenclabelandpwd(filename, label, pwd, key):
 
 def declabelandpwd(filename, info):
     #decrypts SL file, input: file, info('labels' or 'pwds'), returns: info as a list
-    print('RAN THIS LINE 186')
     keys = readfile(filename, 'keys')
     labels =  readfile(filename,"labels")
     pwds = readfile(filename,"pwds")
-    print('keys is ' + str(keys))
     newlabels = [decrypt(labels[x], keys[x]) for x in range(len(keys))]
     newpwds = [decrypt(pwds[x], keys[x]) for x in range(len(keys))]
     if info == 'labels':
@@ -205,75 +147,17 @@ def declabelandpwd(filename, info):
     if info == 'pwds':
         return newpwds
 
-# def apkey(filename, key):
-
-#     #merge wit apenclabelandpwd
-#     #appends key to SL filename
-#     appendtofile(filename, key)
-
-#MAINFRAME CMD TESTER MOD(CMD VERSION OF BASIC PROGRAM(NO STORAGE METHOD)!!)
 """
-choice = raw_input('encrypt, decrypt, or create? >>>')
-if choice == 'encrypt':
-    fn = raw_input('file name: ')
-    ky = raw_input('key: ')
-    lb = raw_input('label : ')
-    pd = raw_input('pwd: ')
-    apkey(fn, ky)
-    apenclabelandpwd(fn, lb, pd, int(ky))
-if choice == 'decrypt':
-    fn = raw_input('file name: ')
-    print declabelandpwd(fn)
-    for i in keys:
-    print keys
-    print labels
-    print pwds
-    for i in keys:
-        print i
-        print labels[i]
-        print pwds[i]
-if choice == 'create':
-    fn = raw_input('file name: ')
-    createlocker(fn)
+███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗      ██████╗ ██╗   ██╗██╗
+████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗    ██╔════╝ ██║   ██║██║
+██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝    ██║  ███╗██║   ██║██║
+██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗    ██║   ██║██║   ██║██║
+██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║  ██║    ╚██████╔╝╚██████╔╝██║
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝  ╚═════╝ ╚═╝
 """
 
-#ENCRYPT/DECRYPT TESTER MOD
-"""
-input = raw_input('text: ')
-kinput = raw_input('key: ')
-enc = encrypt(input, int(kinput))
-print enc
-dinput = raw_input('dkey: ')
-de = decrypt(enc,int(dinput))
-print de
-"""
-
-#FILE WRITING TESTER MOD
-"""
-writetofile(fn + '.slock', "key")
-writetofile(fn + '.slock', "label")
-writetofile(fn + '.slock', "pass")
-writetofile(fn + '.slock', "key")
-writetofile(fn + '.slock', "label")
-writetofile(fn + '.slock', "pass")
-"""
-
-##########################################################################################
-
-#**************
-#GUI FRAMEWORK|
-#**************
-
-import tkinter as tk
-from tkinter import messagebox
-import time
-import os
-
-#VARS
 window = tk.Tk()
-# frame = tk.Frame(window)
 users = readusrsfile()
-#print users
 
 #WINDOW SETTINGS
 window.minsize(350,200)
@@ -282,11 +166,8 @@ window.minsize(350,200)
 def ch():
     #checks if usrname and pwd match, returns True if correct
     users = readusrsfile()
-    print(users)
-    print(users.keys())
     for key in list(users.keys()):
         if users[usr.get()] == pas.get():
-            print(users)
             return True
 
 def filestrip(text):
@@ -296,16 +177,12 @@ def filestrip(text):
 def createlocker(name):
     #creates new SL locker file with defaults
     f = open(name + '.lokr', 'wb')
-    # f.write('DO NOT EDIT THIS FILE(HOW DID YOU GET INTO HERE IN THE FIRST PLACE?!)\n')
     pickle.dump({'ExampleLabel':{5:'ExamplePassword'}}, f)
     f.close()
-
 
 def checkusr(event=None):
     #runs ch() and loads next screen with pwds
     users = readusrsfile()
-    print(usr.get())
-    print(users)
     if (usr.get() in users) == True and ch() == True:
         usrname = str(usr.get())
         confirm.config(text='You have successfully logged on!' )
@@ -325,7 +202,7 @@ def checkusr(event=None):
         window.unbind("<Return>")
         window.title('LOKR MANAGER')
 
-        #change frame
+        #LAUCH LOKR MANAGER
         leftframe = tk.Frame(window, padx = 5, pady=5)
         leftframe.grid(row=0, column=0)
         rightframe = tk.Frame(window, padx = 5, pady=5)
@@ -339,31 +216,36 @@ def checkusr(event=None):
         mtitle.pack()
         logol.pack()
         results = []
-        r = 5
 
+        #GUI METHODS: CALLED WHEN BUTTONS ARE CLICKED
         def cptoclip():
             #copies decrypted pwd to clipboard
             pwds = declabelandpwd(f, 'pwds')
             window.clipboard_clear()
             window.clipboard_append(pwds[listbox.curselection()[0]])
+
         def pwdfromlbl():
-            #changes display text of d button and p label
+            #changes display text of password label and button
             pwds = readfile(f, 'pwds')
             pwdlbl.config(text = '')
             pwdlbl.config(text = 'PASSWORD:\n' + pwds[listbox.curselection()[0]])
             d.config(text = 'SHOW DECRYPTED\nPASSWORD')
+
         def pwdfromlblbc():
-            #runs pwdfromlbl and changes d button display text
+            #runs pwdfromlbl and changes password button display text
             pwdfromlbl()
             d.config(text = 'SHOW DECRYPTED\nPASSWORD')
             d.config(command = showpwd)
+
         def showpwd():
-            #changes p label and d button display text, displayed decrypted pwd
+            #changes password label and button display text, displayed decrypted pwd
             pwds = declabelandpwd(f, 'pwds')
             pwdlbl.config(text = 'PASSWORD:\n' + pwds[listbox.curselection()[0]])
             d.config(text = 'HIDE DECRYPTED\nPASSWORD')
             d.config(command = pwdfromlblbc)
+
         def deletepwd():
+            #deletes selected password from listbox and recreates the listbox
             lbls = declabelandpwd(f, 'labels')
             confirmbox = messagebox.askyesno(title='LOKR MANAGER', message='Are you sure you want to delete the password for ' + lbls[listbox.curselection()[0]])
             if confirmbox == True:
@@ -377,12 +259,17 @@ def checkusr(event=None):
                 pickle.dump(info,fl)
                 fl.close()
                 createlistbox()
+
         def editpwd():
+            #edits password, saves, and recreates listbox
             listbox.unbind("<<ListboxSelect>>")
             selection = listbox.curselection()[0]
             def closec():
+                #closes Toplevel
                 c.destroy()
+
             def save():
+                #saves password to .lokr file
                 if newp.get() == newpc.get():
                     lbls = readfile(f, 'labels')
                     keys = readfile(f, "keys")
@@ -403,6 +290,7 @@ def checkusr(event=None):
                 else:
                     conf.config(text='Passwords do not match. Please retry.')
                 createlistbox()
+
             lbls = declabelandpwd(f, 'labels')
             pwds = declabelandpwd(f, 'pwds')
             c = tk.Toplevel(takefocus=True)
@@ -433,7 +321,7 @@ def checkusr(event=None):
             listbox.bind("<<ListboxSelect>>", getlistboxselection)
 
         def encpass():
-            #creates new window w/ encrypt pwd prompts, stores pwd, lbl, and key to SL file
+            #creates new window w/ encrypt pwd prompts, stores pwd, lbl, and key to lokr file
             def checkcheck():
                 #checks the checkbutton, whether 1 or 0 and blanks out key field or unblanks
                 if cv.get() == 1:
@@ -441,6 +329,7 @@ def checkusr(event=None):
                     k.configure(state=tk.DISABLED)
                 else:
                     k.configure(state=tk.NORMAL)
+
             def storeencpass():
                 #makes sure pwds match and stores pwds
                 if newp.get() == newpc.get():
@@ -448,7 +337,6 @@ def checkusr(event=None):
                         pk = random.randint(1, 26)
                     else:
                         pk = int(k.get())
-                        # apkey(f[:-6], str(pk))
                     apenclabelandpwd(f[:-5], newl.get(), newp.get(), pk)
                     conf.config(text='Password has been successfully encrypted!')
                     createlistbox()
@@ -468,7 +356,6 @@ def checkusr(event=None):
             newl = tk.Entry(t)
             kl = tk.Label(t, text = 'Enter an encryption key(1 - 26):')
             k = tk.Entry(t)
-            print(cv.get())
             kc = tk.Checkbutton(t, text="Auto select a random key", variable = cv, command=checkcheck)
             newpl = tk.Label(t, text='Enter password:')
             newp = tk.Entry(t, show='*')
@@ -489,57 +376,46 @@ def checkusr(event=None):
             eb.pack()
             conf.pack()
             listbox.bind("<<ListboxSelect>>", getlistboxselection)
-        # buttonchoice = tk.IntVar()
         for file in os.listdir(os.getcwd()):
             #finds all lokr files in cwd
             if file.endswith(".lokr"):
                 results.append(file)
         for file in results:
+            #sets f the current users' filename
             if file.startswith(encrypt(usrname, 11)):
                 f = file
-                print(f)
         pwds = readfile(f, 'pwds')
-        #print results
         sellbl = tk.Label(rightframe, text = 'Lokr File associated with account :  ' )
         sellbl.config(text = 'You are logged in as: ' + usrname + '\nThe Lokr File that is associated with your account is: ' +  f)
         sellbl.pack(side='top')
         scrollbar = tk.Scrollbar(bottomframe)
         listboxtitle = tk.Label(leftframe, text='Passwords:', font = ("Verdana", 12))
         listbox = tk.Listbox(bottomframe, font = ("Verdana", 12), yscrollcommand=scrollbar.set)
-        lbls = declabelandpwd(f, 'labels')
-        keys = readfile(f, 'keys')
+
         def createlistbox():
-            #places buttons w/ decrypted pwd labels
+            #creates listbox w/ decrypted pwd labels
             listbox.delete(0,tk.END)
             lbls = declabelandpwd(f, 'labels')
-            print(lbls)
             scrollbar.pack(side='right', fill ='y')
             listboxtitle.pack()
             listbox.pack()
             scrollbar.config(command = listbox.yview)
             lblsd = dict(enumerate(lbls))
             for ind, lbl in list(lblsd.items()):
-                print(lbl)
                 listbox.insert(ind, lbl)
-            # r = 5
-            #         #print ind
-            #         tk.Radiobutton(window, indicatoron = 0, width = 20, height = 3, text = lbl, variable = buttonchoice, value = ind , command=pwdfromlbl).grid(row = r, column =  1)
-            #         r += 1
+
         def getlistboxselection(event):
+            #runs everytime an item in listbox is clicked
             lbls = declabelandpwd(f, 'labels')
             keys = readfile(f, 'keys')
             pwds = readfile(f, 'pwds')
-            # print(listbox.curselection()[0])
-            # print(lbls)
             lbllbl.config(text='LABEL:\n' + lbls[listbox.curselection()[0]])
             pwdlbl.config(text='PASSWORD:\n' + pwds[listbox.curselection()[0]])
             keylbl.config(text='KEY:\n' + str(keys[listbox.curselection()[0]]))
 
-        # print(pwds)
         if pwds is not None:
-            # p = tk.Label(window, text = pwds[0], font = ('bold', 12))
-            # p.grid(row = 5 , column= 2)
             createlistbox()
+        #create and place button on screen
         e = tk.Button(rightframe, text = 'ENCRYPT PASSWORD', width = 30, pady = 5, command = encpass)
         d = tk.Button(brightframe, text = 'SHOW DECRYPTED\nPASSWORD', width = 20, pady = 5, command = showpwd)
         cp = tk.Button(brightframe, text = 'COPY PASSWORD\nTO CLIPBOARD', width = 20, pady = 5, command = cptoclip)
@@ -550,7 +426,6 @@ def checkusr(event=None):
         change.pack()
         d.grid(row=0,column=2)
         cp.grid(row=1,column=2)
-        # getlistboxselection(1)
         listbox.bind("<<ListboxSelect>>", getlistboxselection)
         lbllbl = tk.Label(brightframe, text='LABEL:\n')
         lbllbl.grid(row = 0 , column = 0)
@@ -563,8 +438,9 @@ def checkusr(event=None):
         usr.delete(0, tk.END)
         pas.delete(0, tk.END)
 
+#LOGIN GUI METHODS
 def cleart():
-    #clears fields
+    #clears entry fields
     usr.delete(0, tk.END)
     pas.delete(0, tk.END)
     confirm.config(text=' ' )
@@ -610,7 +486,15 @@ def newuser():
     register = tk.Button(window, text="Register!", command=reg)
     register.pack(expand = True)
 
-#LOGIN UI WIDGETS
+"""
+██╗      ██████╗  ██████╗ ██╗███╗   ██╗     ██████╗ ██╗   ██╗██╗
+██║     ██╔═══██╗██╔════╝ ██║████╗  ██║    ██╔════╝ ██║   ██║██║
+██║     ██║   ██║██║  ███╗██║██╔██╗ ██║    ██║  ███╗██║   ██║██║
+██║     ██║   ██║██║   ██║██║██║╚██╗██║    ██║   ██║██║   ██║██║
+███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║    ╚██████╔╝╚██████╔╝██║
+╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝     ╚═════╝  ╚═════╝ ╚═╝
+"""
+
 ex = tk.Button(window, text = 'Exit', command= ee)
 logo = tk.PhotoImage(file='lock.png')
 logolbl = tk.Label(window, text= '\n', image=logo, pady = 50)
