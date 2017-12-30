@@ -21,6 +21,9 @@
 
 
 # LOKR
+
+![alt text](https://raw.githubusercontent.com/BugsForDays/Lokr/master/closedlock.ico)
+
 ## SecureLocker Improved. A little bit safer. New GUI. Edit and Delete Passwords
 
 ### EDITION 1.0
