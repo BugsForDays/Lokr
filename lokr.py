@@ -8,7 +8,7 @@
 
 ****************************************************************************
 |                   LOKR PASSWORD ENCRYTION MANAGER                        |
-|   Created by BugsForDays aka Philip Z(https://github.com/BugsForDays)    |                                                            |
+|   Created by petabite aka Philip Z(https://github.com/petabite)          |                                                            |
 #***************************************************************************
 """
 import random
