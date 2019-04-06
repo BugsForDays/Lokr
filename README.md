@@ -27,7 +27,7 @@
 ## SecureLocker Improved. A little bit safer. New GUI. Edit and Delete Passwords
 
 ### EDITION 1.0
-### Created by [BugsForDays](https://github.com/BugsForDays "To my Github Profile!!!") aka 尸廾工𠃊工尸 乙
+### Created by [petabite](https://github.com/petabite "To my Github Profile!!!") aka 尸廾工𠃊工尸 乙
 ----
 
 ----
