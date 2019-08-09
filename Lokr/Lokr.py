@@ -1,12 +1,24 @@
-import random
+"""
+██╗      ██████╗ ██╗  ██╗██████╗
+██║     ██╔═══██╗██║ ██╔╝██╔══██╗
+██║     ██║   ██║█████╔╝ ██████╔╝
+██║     ██║   ██║██╔═██╗ ██╔══██╗
+███████╗╚██████╔╝██║  ██╗██║  ██║
+╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+
+****************************************************************************
+|                   LOKR PASSWORD ENCRYTION MANAGER                        |
+|   Created by petabite aka Philip Z(https://github.com/petabite)          |
+****************************************************************************
+"""
+
 import pickle
 import tkinter as tk
-from tkinter import messagebox
 import os
 from Crypt import Crypt
 from LoginFrame import LoginFrame
 
-
+# TODO: organize in folders
 class Lokr(tk.Tk):
     ver = 1.1
     
@@ -132,8 +144,6 @@ class Lokr(tk.Tk):
         f = open(self.crypt.encrypt(name, 11) + '.lokr', 'wb')
         pickle.dump({'ExampleLabel':{5:'ExamplePassword'}}, f)
         f.close()
-        
-    #manager
 
 
 lokr = Lokr()

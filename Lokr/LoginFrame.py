@@ -1,3 +1,12 @@
+"""
+██╗      ██████╗  ██████╗ ██╗███╗   ██╗     ██████╗ ██╗   ██╗██╗
+██║     ██╔═══██╗██╔════╝ ██║████╗  ██║    ██╔════╝ ██║   ██║██║
+██║     ██║   ██║██║  ███╗██║██╔██╗ ██║    ██║  ███╗██║   ██║██║
+██║     ██║   ██║██║   ██║██║██║╚██╗██║    ██║   ██║██║   ██║██║
+███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║    ╚██████╔╝╚██████╔╝██║
+╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝     ╚═════╝  ╚═════╝ ╚═╝
+"""
+
 import tkinter as tk
 from ManagerFrame import ManagerFrame
 
@@ -29,7 +38,7 @@ class LoginFrame(tk.Frame):
         self.newusr.pack()
         self.clear.pack()
         self.confirm.pack()
-        self.bind("<Return>", self.checkUser) 
+        self.lokr.bind("<Return>", self.checkUser) 
         self.pack()
         
     def checkUser(self, event=None):

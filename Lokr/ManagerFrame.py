@@ -1,6 +1,14 @@
-import random
+"""
+███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗      ██████╗ ██╗   ██╗██╗
+████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗    ██╔════╝ ██║   ██║██║
+██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝    ██║  ███╗██║   ██║██║
+██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗    ██║   ██║██║   ██║██║
+██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║  ██║    ╚██████╔╝╚██████╔╝██║
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝  ╚═════╝ ╚═╝
+"""
+
 import tkinter as tk
-import pickle
+from tkinter import messagebox
 from NewPassword import NewPassword
 from EditPassword import EditPassword
 
@@ -64,7 +72,7 @@ class ManagerFrame(tk.Frame):
         #deletes selected password from listbox and recreates the listbox
         lbls = self.lokr.decryptLokr(self.lokr.lokr_file, 'labels')
         confirmbox = tk.messagebox.askyesno(title='LOKR MANAGER', message='Are you sure you want to delete the password for ' + lbls[self.listbox.curselection()[0]])
-        if confirmbox == True:
+        if confirmbox is True:
             self.lokr.deletePassword(self.listbox.curselection()[0])
             
             self.createPasswordsList()
