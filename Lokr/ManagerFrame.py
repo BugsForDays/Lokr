@@ -14,6 +14,7 @@ from EditPassword import EditPassword
 
 class ManagerFrame(tk.Frame):
     def __init__(self, lokr_object):
+        # init manager frame and pack to lokr window
         self.lokr = lokr_object
         tk.Frame.__init__(self, self.lokr)
         self.leftframe = tk.Frame(self, padx = 5, pady=5)
@@ -28,8 +29,6 @@ class ManagerFrame(tk.Frame):
         self.logol = tk.Label(self.leftframe, text= '\n', image=self.lokr.logo, pady = 50)
         self.mtitle.pack()
         self.logol.pack()
-
-        # pwds = parseLokrFile(f, 'pwds')
         self.sellbl = tk.Label(self.rightframe, text = 'Lokr File associated with account :  ' )
         self.sellbl.config(text = 'You are logged in as: ' + self.lokr.user + '\nThe Lokr File that is associated with your account is: ' +  self.lokr.lokr_file)
         self.sellbl.pack(side='top')
@@ -37,7 +36,6 @@ class ManagerFrame(tk.Frame):
         self.listboxtitle = tk.Label(self.leftframe, text='Passwords:', font = ("Verdana", 12))
         self.listbox = tk.Listbox(self.bottomframe, font = ("Verdana", 12), yscrollcommand=self.scrollbar.set)
         self.createPasswordsList()
-        # results = []
         self.e = tk.Button(self.rightframe, text = 'ENCRYPT PASSWORD', width = 30, pady = 5, command = self.encryptPasswordPrompt)
         self.d = tk.Button(self.brightframe, text = 'SHOW DECRYPTED\nPASSWORD', width = 20, pady = 5, command = self.showDecryptedPassword)
         self.cp = tk.Button(self.brightframe, text = 'COPY PASSWORD\nTO CLIPBOARD', width = 20, pady = 5, command = self.copyPasswordToClipboard)
@@ -58,50 +56,50 @@ class ManagerFrame(tk.Frame):
         self.pack()
 
     def encryptPasswordPrompt(self):
+        # display new password prompt
         self.listbox.unbind("<<ListboxSelect>>")
         NewPassword(self)
         self.listbox.bind("<<ListboxSelect>>", self.getPasswordSelection)
 
     def editPasswordPrompt(self):
-        #edits password, saves, and recreates listbox
+        # display edit password prompt
         self.listbox.unbind("<<ListboxSelect>>")
         EditPassword(self)
         self.listbox.bind("<<ListboxSelect>>", self.getPasswordSelection)
 
     def deletePassword(self):
-        #deletes selected password from listbox and recreates the listbox
-        lbls = self.lokr.decryptLokr(self.lokr.lokr_file, 'labels')
+        # deletes selected password from pwd list and recreates the list
+        lbls = self.lokr.decryptLokr('labels')
         confirmbox = tk.messagebox.askyesno(title='LOKR MANAGER', message='Are you sure you want to delete the password for ' + lbls[self.listbox.curselection()[0]])
         if confirmbox is True:
             self.lokr.deletePassword(self.listbox.curselection()[0])
-            
             self.createPasswordsList()
 
     def copyPasswordToClipboard(self):
-        #copies decrypted pwd to clipboard
-        pwds = self.lokr.decryptLokr(self.lokr.lokr_file, 'pwds')
+        # copies decrypted pwd to clipboard
+        pwds = self.lokr.decryptLokr('pwds')
         self.lokr.clipboard_clear()
         self.lokr.clipboard_append(pwds[self.listbox.curselection()[0]])
 
     def hideDecryptedPassword(self):
-        #changes display text of password label and button
-        pwds = self.lokr.parseLokrFile(self.lokr.lokr_file, 'pwds')
+        # changes display text of password label and button
+        pwds = self.lokr.parseLokrFile('pwds')
         self.pwdlbl.config(text = '')
         self.pwdlbl.config(text = 'PASSWORD:\n' + pwds[self.listbox.curselection()[0]])
         self.d.config(text = 'SHOW DECRYPTED\nPASSWORD')
         self.d.config(command = self.showDecryptedPassword)
     
     def showDecryptedPassword(self):
-        #changes password label and button display text, displayed decrypted pwd
-        pwds = self.lokr.decryptLokr(self.lokr.lokr_file, 'pwds')
+        # changes password label and button display text, displayed decrypted pwd
+        pwds = self.lokr.decryptLokr('pwds')
         self.pwdlbl.config(text = 'PASSWORD:\n' + pwds[self.listbox.curselection()[0]])
         self.d.config(text = 'HIDE DECRYPTED\nPASSWORD')
         self.d.config(command = self.hideDecryptedPassword)
 
     def createPasswordsList(self):
-        #creates listbox w/ decrypted pwd labels
+        # creates listbox w/ decrypted pwd labels
         self.listbox.delete(0,tk.END)
-        lbls = self.lokr.decryptLokr(self.lokr.lokr_file, 'labels')
+        lbls = self.lokr.decryptLokr('labels')
         self.scrollbar.pack(side='right', fill ='y')
         self.listboxtitle.pack()
         self.listbox.pack()
@@ -111,10 +109,10 @@ class ManagerFrame(tk.Frame):
             self.listbox.insert(ind, lbl)
 
     def getPasswordSelection(self, event):
-        #runs everytime an item in listbox is clicked
-        lbls = self.lokr.decryptLokr(self.lokr.lokr_file, 'labels')
-        keys = self.lokr.parseLokrFile(self.lokr.lokr_file, 'keys')
-        pwds = self.lokr.parseLokrFile(self.lokr.lokr_file, 'pwds')
+        # runs everytime a password in password list is clicked
+        lbls = self.lokr.decryptLokr('labels')
+        keys = self.lokr.parseLokrFile('keys')
+        pwds = self.lokr.parseLokrFile('pwds')
         self.lbllbl.config(text='LABEL:\n' + lbls[self.listbox.curselection()[0]])
         self.pwdlbl.config(text='PASSWORD:\n' + pwds[self.listbox.curselection()[0]])
         self.keylbl.config(text='KEY:\n' + str(keys[self.listbox.curselection()[0]]))

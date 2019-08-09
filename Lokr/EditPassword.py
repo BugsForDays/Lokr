@@ -2,11 +2,12 @@ import tkinter as tk
 
 class EditPassword(tk.Toplevel):
     def __init__(self, manager_frame_object):
+        # init edit password toplevel
         self.manager_frame = manager_frame_object
         tk.Toplevel.__init__(self, self.manager_frame)
         self.selection = self.manager_frame.listbox.curselection()[0]
-        self.lbls = self.manager_frame.lokr.decryptLokr(self.manager_frame.lokr.lokr_file, 'labels')
-        self.pwds = self.manager_frame.lokr.decryptLokr(self.manager_frame.lokr.lokr_file, 'pwds')
+        self.lbls = self.manager_frame.lokr.decryptLokr('labels')
+        self.pwds = self.manager_frame.lokr.decryptLokr('pwds')
         self.title("Edit Password for " + self.lbls[self.manager_frame.listbox.curselection()[0]])
         self.geometry('250x300')
         self.l = tk.Label(self, text = 'EDIT A PASSWORD:\n')
@@ -19,7 +20,7 @@ class EditPassword(tk.Toplevel):
         self.newpcl = tk.Label(self, text='Confirm password:')
         self.newpc = tk.Entry(self, show='*')
         self.eb = tk.Button(self, text='SAVE PASSWORD', command = self.save)
-        self.cancel = tk.Button(self, text='Cancel', command=self.closeEditPrompt)
+        self.cancel = tk.Button(self, text='Cancel', command=self.destroy)
         self.conf = tk.Label(self, text = '')
         self.l.pack()
         self.newll.pack()
@@ -31,20 +32,13 @@ class EditPassword(tk.Toplevel):
         self.eb.pack()
         self.cancel.pack()
         self.conf.pack()
-        
-    def closeEditPrompt(self):
-        #closes Toplevel
-        self.destroy()
 
     def save(self):
-        #saves password to .lokr file
+        # saves edited password to .lokr file; edits password, saves, and recreates pwd list
         if self.newp.get() == self.newpc.get():
-            lbls = self.manager_frame.lokr.parseLokrFile(self.manager_frame.lokr.lokr_file, 'labels')
-            keys = self.manager_frame.lokr.parseLokrFile(self.manager_frame.lokr.lokr_file, "keys")
-            self.manager_frame.lokr.deletePassword(self.selection)
-            self.manager_frame.lokr.savePassword(self.manager_frame.lokr.lokr_file, self.newl.get(), self.newp.get(), int(keys[self.selection]))
+            self.manager_frame.lokr.editPassword(self.selection, self.newl.get(), self.newp.get())
             self.conf.config(text='Password has been successfully saved!')
-            self.cb = tk.Button(self, text='CLOSE WINDOW', command = self.closeEditPrompt)
+            self.cb = tk.Button(self, text='CLOSE WINDOW', command = self.destroy)
             self.cb.pack()
             self.manager_frame.createPasswordsList()
         else:

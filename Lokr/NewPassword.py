@@ -5,10 +5,10 @@ import random
 class NewPassword(tk.Toplevel):
     #creates new window w/ encrypt pwd prompts, stores pwd, lbl, and key to lokr file
     def __init__(self, manager_frame_object):
+        # init new password toplevel
         self.manager_frame = manager_frame_object
         tk.Toplevel.__init__(self, self.manager_frame)
         self.cv = tk.IntVar()
-        # self.self = tk.Toplevel()
         self.geometry('250x300')
         self.l = tk.Label(self, text = 'ENCRYPT A NEW PASSWORD:\n')
         self.newll = tk.Label(self, text = 'Enter password identifier/label:')
@@ -36,7 +36,7 @@ class NewPassword(tk.Toplevel):
         self.conf.pack()
 
     def checkRandomKey(self):
-        #checks the checkbutton, whether 1 or 0 and blanks out key field or unblanks
+        # checks the random key checkbutton, whether 1 or 0 and blanks out key field or unblanks
         if self.cv.get() == 1:
             self.k.delete(0, tk.END)
             self.k.configure(state=tk.DISABLED)
@@ -44,13 +44,13 @@ class NewPassword(tk.Toplevel):
             self.k.configure(state=tk.NORMAL)
 
     def storePassword(self):
-        #makes sure pwds match and stores pwds
+        # makes sure new pwds match and updates pwds
         if self.newp.get() == self.newpc.get():
             if self.cv.get() == 1:
                 pk = random.randint(1, 26)
             else:
                 pk = int(self.k.get())
-            self.manager_frame.lokr.savePassword(self.manager_frame.lokr.lokr_file, self.newl.get(), self.newp.get(), pk)
+            self.manager_frame.lokr.savePassword(self.newl.get(), self.newp.get(), pk)
             self.conf.config(text='Password has been successfully encrypted!')
             self.manager_frame.createPasswordsList()
             self.c = tk.Button(self, text='CLOSE WINDOW', command = self.destroy)

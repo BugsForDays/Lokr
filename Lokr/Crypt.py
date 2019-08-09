@@ -6,11 +6,11 @@ class Crypt:
 
     # ENCRYPTION/DECRYPTION METHODS
     def translateCipher(self, cp, key):
-        #reorder cipher based on key, returns: cipher as new cipher list
+        # reorder cipher based on key, returns: cipher as new cipher list
         return cp[key:] + cp[0:key]
 
     def encrypt(self, text, key):
-        #encrypt text with key via string construction, returns: encrypted text as string
+        # encrypt text with key via string construction, returns: encrypted text as string
         encrypted = ''
         newCharset = list(self.translateCipher(self.plain_text, key))
         for i in range(len(text)):
@@ -19,7 +19,7 @@ class Crypt:
         return encrypted
 
     def decrypt(self, text, key):
-        #inverse of encrypt(): decrypts text based on key, returns: decrypted text as string
+        # inverse of encrypt(): decrypts text based on key, returns: decrypted text as string
         decrypted = ''
         newCharset = list(self.translateCipher(self.plain_text, int(key)))
         for i in range(len(text)):
