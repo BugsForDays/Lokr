@@ -15,6 +15,7 @@
 import pickle
 import tkinter as tk
 import os
+import sys
 from Crypt import Crypt
 from LoginFrame import LoginFrame
 
@@ -27,8 +28,8 @@ class Lokr(tk.Tk):
         self.lokr_file = ''
         self.user_file = '.lokrdata/usrs.ulokr'
         self.user = ''
-        self.wm_iconbitmap(self, default='assets/closedlock.ico')
-        self.logo = tk.PhotoImage(file='assets/lock.png')
+        self.wm_iconbitmap(self, default=self.resource_path('assets\\closedlock.ico'))
+        self.logo = tk.PhotoImage(file=self.resource_path('assets\\lock.png'))
         self.title('LOKR LOGIN')
         self.minsize(350, 200)
         plain_text_file = open('.lokrdata/cset.dlokr', 'rb')
@@ -151,5 +152,15 @@ class Lokr(tk.Tk):
         file = open('.lokrdata/' + self.crypt.encrypt(name, 11) + '.lokr', 'wb')
         pickle.dump({'ExampleLabel':{5:'ExamplePassword'}}, file)
         file.close()
+
+    # HELPER METHODS
+
+    def resource_path(self, relative_path):
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
 
 lokr = Lokr()

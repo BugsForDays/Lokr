@@ -83,7 +83,7 @@ class LoginFrame(tk.Frame):
 
     def register(self, event=None):
         # makes sure no two usr names are same, creates .lokr and displays success
-        if (self.new_username_field.get() in self.lokr.readUsersFile()) is False and self.new_password_field.get() is self.password_confirmation_field.get():
+        if (self.new_username_field.get() in self.lokr.readUsersFile()) is False and self.new_password_field.get() == self.password_confirmation_field.get():
             self.lokr.saveUser(self.new_username_field.get(), self.new_password_field.get())
             self.lokr.createLokr(self.new_username_field.get())
             self.confirmation_label.config(text='You have successfully registered!\n A new Lokr has been created for you.')
