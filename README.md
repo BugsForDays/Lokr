@@ -22,7 +22,7 @@
 
 # LOKR
 
-![logo](https://raw.githubusercontent.com/BugsForDays/Lokr/master/closedlock.ico)
+![logo](https://raw.githubusercontent.com/BugsForDays/Lokr/master/Lokr/assets/closedlock.ico)
 
 ## SecureLocker Improved. A little bit safer. New GUI. Edit and Delete Passwords
 
@@ -40,7 +40,7 @@
 |v1.0       | <ul><li>FIRST RELEASE!!</li></ul>    |11/24/2017
 
 ## SCREENSHOT:
-![screenshot](https://raw.githubusercontent.com/petabite/Lokr/refactor/images/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/petabite/Lokr/master/images/screenshot.png)
 
 
 
