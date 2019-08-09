@@ -5,24 +5,24 @@ class Crypt:
         self.plain_text = plain_text
 
     # ENCRYPTION/DECRYPTION METHODS
-    def translateCipher(self, cp, key):
+    def translateCipher(self, cipher_text, key):
         # reorder cipher based on key, returns: cipher as new cipher list
-        return cp[key:] + cp[0:key]
+        return cipher_text[key:] + cipher_text[0:key]
 
     def encrypt(self, text, key):
         # encrypt text with key via string construction, returns: encrypted text as string
         encrypted = ''
-        newCharset = list(self.translateCipher(self.plain_text, key))
-        for i in range(len(text)):
-            if text[i] in newCharset:
-                encrypted += self.cipher_text[newCharset.index(text[i])]
+        translated_cipher = list(self.translateCipher(self.plain_text, key))
+        for char in range(len(text)):
+            if text[char] in translated_cipher:
+                encrypted += self.cipher_text[translated_cipher.index(text[char])]
         return encrypted
 
     def decrypt(self, text, key):
         # inverse of encrypt(): decrypts text based on key, returns: decrypted text as string
         decrypted = ''
-        newCharset = list(self.translateCipher(self.plain_text, int(key)))
-        for i in range(len(text)):
-            if text[i] in self.cipher_text:
-                decrypted += newCharset[self.cipher_text.index(text[i])]
+        translated_plain = list(self.translateCipher(self.plain_text, int(key)))
+        for char in range(len(text)):
+            if text[char] in self.cipher_text:
+                decrypted += translated_plain[self.cipher_text.index(text[char])]
         return decrypted
